@@ -5,10 +5,19 @@
 
 (defn ^:private story->div-element
   [story]
+  (let [link (:link story)
+        link-idx (-> link (.indexOf "*")) ; actual article link is after *
+        article-link (if (> link-idx 0) 
+                       (-> link (.substring (+ link-idx 1)))
+                       link)
+        article-domain-idx (-> article-link (.indexOf "/" 8)) ; 8 should cover http[s]://
+        display-link (if (> article-domain-idx 0) 
+                       (str (-> article-link (.subSequence 0 article-domain-idx)) "/...")
+                       article-link)] 
   [:div {:class "span4"} 
    [:p (:title story) [:br] 
-    [:a {:href (:link story)} (:link story)] [:br]
-    (s/story->date story)]])
+    [:a {:href (:link story)} display-link] [:br] 
+    (s/story->date story)]]))
 
 (defn get-news-html
   "Get latest news for a ticker symbol"
