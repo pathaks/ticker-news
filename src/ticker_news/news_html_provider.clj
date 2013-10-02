@@ -12,12 +12,13 @@
                        link)
         article-domain-idx (-> article-link (.indexOf "/" 8)) ; 8 should cover http[s]://
         display-link (if (> article-domain-idx 0) 
-                       (str (-> article-link (.subSequence 0 article-domain-idx)) "/...")
-                       article-link)] 
-  [:div {:class "span4"} 
-   [:p (:title story) [:br] 
-    [:a {:href (:link story)} display-link] [:br] 
-    (s/story->date story)]]))
+                       (-> article-link (.subSequence 0 article-domain-idx))
+                       article-link)
+        hostname (clojure.string/replace display-link #"http(s*)://" "")] 
+  [:div {:class "span8"}
+   [:h5 [:a {:href (:link story)} (:title story)]]
+   [:cite hostname [:span (format " (%s) " (s/story->date story))]]
+   [:hr]]))
 
 (defn get-news-html
   "Get latest news for a ticker symbol"
@@ -31,6 +32,10 @@
                  [:title (format "News for %s" ticker)]
                  [:link {:rel "stylesheet" :type "text/css" :href "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"}]] 
                 [:body 
+                 [:div {:class "jumbotron"}
+                  [:div {:class "container"}
+                   [:h2 {:align "left"} (format "News for ticker %s" ticker)]
+                   ]]
                  [:div {:class "container"}
                   [:div {:class "row"}
                    (for [story stories] 
