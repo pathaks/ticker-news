@@ -2,13 +2,19 @@
   (:use compojure.core)
   (:require [compojure.handler :as handler]
             [compojure.route :as route]
-            [ticker-news.news-html-provider :as nhp]))
+            [ticker-news.news-app :as app]
+            [ticker-news.views.news-html :as news-html]))
 
 (defroutes app-routes
-  (GET "/" [] (nhp/get-form-page))
-  (POST "/" {params :params} (nhp/get-news-html {:ticker params}))
-  (GET "/news/:tckr" [tckr] (nhp/get-news-html tckr))
+  
+  (GET "/" [] (news-html/get-form-page))
+  
+  (POST "/" {params :params} (app/get-news params))
+  
+  (GET "/news" {params :params} (app/get-news params))
+  
   (route/resources "/" "/news")
+  
   (route/not-found "Not Found"))
 
 (def app

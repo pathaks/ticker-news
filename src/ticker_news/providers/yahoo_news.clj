@@ -1,7 +1,11 @@
-(ns ticker-news.yahoo-news-provider
+(ns ticker-news.providers.yahoo-news
   (:require [clojure.xml :as xml]
             [clojure.core.memoize :as memo]
-            [ticker-news.story :as story]))
+            [ticker-news.model.story :as story]))
+
+;Yahoo! ticker news provider implementation
+
+(def source-name "Yahoo! News")
 
 (defn ^:private get-ticker-data
   [ticker]
@@ -24,15 +28,15 @@
         title     (-> (filter #(= (:tag %) :title) content) first :content first)
         link      (-> (filter #(= (:tag %) :link) content) first :content first)
         pub-date  (-> (filter #(= (:tag %) :pubDate) content) first :content first)
-        timestamp (-> (java.text.SimpleDateFormat. "EEE, d MMM yyyy H:m:s z" java.util.Locale/ENGLISH) 
-                    (.parse pub-date) 
-                    (.getTime))]
+        timestamp (if pub-date (-> (java.text.SimpleDateFormat. "EEE, d MMM yyyy H:m:s z" java.util.Locale/ENGLISH) 
+                                 (.parse pub-date) 
+                                 (.getTime))
+                    nil)]
     {:title title :link link :timestamp timestamp}))
 
-(defn get-ticker-stories
+(defn get-ticker-yahoo-news
   [ticker]
-  {:pre [ticker]}
   (let [ticker-data (get-ticker-data-memoized ticker)
         items       (ticker-data->items ticker-data)]
     (filter #(story/valid-story? %)
-            (mapv item->story items))))
+            (map item->story items))))
