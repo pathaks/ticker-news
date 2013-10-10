@@ -1,7 +1,8 @@
+
 # ticker-news
 
 This is a web application that gives you current news articles given a stock ticker symbol. I created it to play around with
-[Compojure][1], [Hiccup][2] and [Bootstrap][3]. News is currently powered by [Yahoo Company News RSS Feed][4] but the application
+[Compojure][1], [Hiccup][2] and [Bootstrap][3]. News is currently powered by [Yahoo Company News RSS Feed][4] and [StockTwits][8] but the application
 can be easily extended to add more sources.
 
 This application can be easily deployed to [Amazon Web Services][5], please see [Lein-Beanstalk][6] for deployment steps.
@@ -17,6 +18,7 @@ You will need [Leiningen][7] 1.7.0 or above installed.
 [5]: http://aws.amazon.com
 [6]: https://github.com/weavejester/lein-beanstalk
 [7]: https://github.com/technomancy/leiningen
+[8]: http://stocktwits.com/developers/docs/api#streams-symbol-docs
 
 ## Running
 

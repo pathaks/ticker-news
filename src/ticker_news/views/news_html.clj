@@ -5,16 +5,12 @@
 
 (defn ^:private story->div-element
   [story]
-  (let [link (:link story)
-        link-idx (-> link (.indexOf "*")) ; actual article link is after *
-        article-link (if (> link-idx 0) 
-                       (-> link (.substring (+ link-idx 1)))
+  (let [link         (:link story)
+        domain-idx   (-> link (.indexOf "/" 8)) ; 8 should cover http[s]://
+        display-link (if (> domain-idx 0) 
+                       (-> link (.subSequence 0 domain-idx))
                        link)
-        article-domain-idx (-> article-link (.indexOf "/" 8)) ; 8 should cover http[s]://
-        display-link (if (> article-domain-idx 0) 
-                       (-> article-link (.subSequence 0 article-domain-idx))
-                       article-link)
-        hostname (clojure.string/replace display-link #"http(s*)://" "")] 
+        hostname     (clojure.string/replace display-link #"http(s*)://" "")] 
   [:div {:class "span12"}
    [:h5 [:a {:href (:link story)} (:title story)]]
    [:cite hostname [:span (format " (%s) " (s/story->date story))]]

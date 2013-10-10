@@ -4,6 +4,7 @@
                  [compojure "1.1.5"]
                  [hiccup "1.0.4"]
                  [org.clojure/core.memoize "0.5.6"] ;provides support for ttl based memoization
+                 [org.clojure/data.json "0.2.3"]
                  ]
   :plugins [[lein-ring "0.8.5"]
             [lein-beanstalk "0.2.7"]]
